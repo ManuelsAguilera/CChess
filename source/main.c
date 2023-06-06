@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "menu.h"
+
 
 int main(int argc, char* argv[])
 {
-	for (int i = 0; i < argc; i++)
-		printf("%s ",argv[i]);
+	menuPrincipal();
+
 	return 0;
 }

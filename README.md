@@ -1,12 +1,15 @@
-# CChess o Chess.c 
+# CChess o Chess.c
 
 ## Proyecto final Estructura de datos
+
 ---
 
 ## Integrantes:
+
 - Eliseo Guarda
 - Felipe Villaroel
 - Manuel Aguilera
+
 ---
 
 # Descripcion del proyecto:
