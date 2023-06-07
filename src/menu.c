@@ -30,7 +30,14 @@ void menuJugadores(HashMap * playersMap)
 		switch	(opcion) 
 		{
 			case 1:
-				puts("to do");
+				SEP;
+				puts("Top 10 winners:");
+
+				if (showTopWinners(playersMap) != 0)
+				{
+					SEP;
+					puts("Hubo un problema...");
+				}
 				break;
 			case 2:
 				puts("Ingrese el nombre");

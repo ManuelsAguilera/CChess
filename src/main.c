@@ -9,7 +9,7 @@
 
 int main(int argc, char* argv[])
 {
-	HashMap * playersMap = createMap(10);
+	HashMap * playersMap = readPlayers();
   
 	menuPrincipal(playersMap);
 

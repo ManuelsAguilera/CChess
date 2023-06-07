@@ -24,6 +24,7 @@ int showPlayer(HashMap * playersMap, char * name);
 int showAllPlayers(HashMap * playersMap);
 int deletePlayer(HashMap * playersMap, char * name);
 int createProfile(HashMap * playersMap, char * name);
+int showTopWinners(HashMap * playersMap);
 
 
 #endif /* players_h */
