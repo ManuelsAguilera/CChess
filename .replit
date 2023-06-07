@@ -1,4 +1,4 @@
-run = "bash /home/runner/CChess/compile.sh"
+run = "bash compile.sh"
 
 [nix]
 channel = "stable-22_11"
