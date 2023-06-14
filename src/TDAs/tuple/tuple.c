@@ -1,91 +1,86 @@
 #include <stdlib.h>
+#include <stdio.h>
+
 typedef struct tuple {
-	int null;
 	int x;
 	int y;
 } tuple;
 
-tuple createTuple(int x,int y) //constructor
+tuple* createTuple(int x,int y) //constructor
 {
-	tuple new;
-	new.x=x;
-	new.y=y;
-	new.null=0;
-	return new;
+	
+	tuple*  New;
+	New = malloc(sizeof(tuple));
+	New->x=x;
+	New->y=y;
+	return New;
 }
 
-void nullifyTuple(tuple T)
+void nullifyTuple(tuple* T)
 {
-	private T.null  = 1;
-	T.x=0;
-	T.y=0;
+	free(T);
+	T=NULL;
 }
 
-int isnull(tuple T)
-{
-	return (T.null);
-}
 
-tuple sumTuple(tuple summand1,tuple summand2)
+
+void sumTuple(tuple* summand1,tuple* summand2)
 {
-	tuple new;
-	//check if there are null summands
-	if ( isnull(summand1) | isnull(summand2) )
-		return nullifyTuple(new);
+	//check if a summand is null
+	if (summand1 == NULL || summand2 ==NULL)
+		return;
 	//else
-	new.x = summand1.x + summand2.x;
-	new.y = summand1.y + summand2.y;
-	return new;
+	summand1->x += summand2->x;
+	summand1->y += summand2->y;
+	return;
 }
 
-tuple substractTuple(tuple minuend, tuple subtrahend)
+void substractTuple(tuple* minuend, tuple* subtrahend)
 {
-	tuple new;
-	if ( isnull(minuend) | isnull(subtrahend))
-		return nullifyTuple(new);
+	if ( minuend == NULL || subtrahend == NULL)
+		return;
 	//else
-	new.x = minuend.x - subtrahend.x;
-	new.y = minuend.y - subtrahend.y;
-	return new;
+	minuend->x += (-1)*subtrahend->x;
+	minuend->y += (-1)*subtrahend->y;
+	return;
 }
 
-tuple multiplyTuple(tuple multiplicand,tuple multiplier)
+void multiplyTuple(tuple* multiplicand,tuple* multiplier)
 {
-	tuple new;
-	if ( isnull(multiplicand) | isnull(multiplier))
-		return nullify(new);
+	if ( multiplicand == NULL || multiplier == NULL)
+		return;
 	//else
-	new.x = multiplicand.x * multiplier.x;
-	new.y = multiplicand.y * multiplier.y;
-	return new;
+	multiplicand->x *= multiplier->x;
+	multiplicand->y *= multiplier->y;
+	return;
 }
 
-tuple scaleTuple(tuple T,int scalar)
+void scaleTuple(tuple* T,int scalar)
 {
-	if (isnull(T)) return T;
-	T.x*=escalar;
-	T.y*=escalar;
-	return T;
+	if (T == NULL) return;
+	T->x*=scalar;
+	T->y*=scalar;
+	return;
 }
 
 
-tuple divideTuple(tuple dividend,tuple divisor) //this is int division
+void divideTuple(tuple* dividend,tuple* divisor) //this is int division
 	{
-		tuple new;
-		if ( isnull(dividend) | isnull(divisor))
-			return nullifyTuple(new);
+		
+		if ( dividend == NULL  || divisor == NULL)
+			return;
 		//else
-		new.x = dividend.x / divisor.x;
-		new.y = dividend.y / divisor.y;
-		return new;
+		dividend->x /= divisor->x;
+		dividend->y /= divisor->y;
+		return;
 	}
 
-int cmpTuple(tuple first,tuple second)
+int cmpTuple(tuple* first,tuple* second)
 {
-	if (first.null == second.null)
-		if (first.x == second.x)
-			if (first.y == second.y)
-				return 1;
-	//else
+	
+	if (first->x == second->x)
+		if (first->y == second->y)
+			return 1;
+	//<else
 	return 0;	
 }

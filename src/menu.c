@@ -1,16 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "players.h"
+#include "game.h"
+#include <ncurses.h>
+//#include <ncurses.h>
 
 #define SEP printf("\n**********************************\n")
 
+
+//funcion estetica
+
+void writeLogo()
+{
+	const char *logo[10] = {
+    "   ______ __  __ ______ _____ _____                             ",
+    "  / ____// / / // ____// ___// ___/                             ",
+    " / /    / /_/ // __/   \\__ \\ \\__ \\                              ",
+    "/ /___ / __  // /___  ___/ /___/ /                              ",
+    "\\____//_/ /_//_____/ /____//____/                               ",
+    "                  _  __   __                  _           ______",
+    " _      __ _____ (_)/ /_ / /_ ___   ____     (_)____     / ____/",
+    "| | /| / // ___// // __// __// _ \\ / __ \\   / // __ \\   / /     ",
+    "| |/ |/ // /   / // /_ / /_ /  __// / / /  / // / / /  / /___   ",
+    "|__/|__//_/   /_/ \\__/ \\__/ \\___//_/ /_/  /_//_/ /_/   \\____/   "
+	};
+
+	for (int i = 0; i < 10; i++)
+		printf("%s\n",logo[i]);
+
+	
+}
+
+
+
 //FUNCIONES DE MENU
+
+
+
 
 void menuJugadores(HashMap * playersMap)
 {
 	int opcion;
 	char name[11];
 	SEP;
+	
 	puts("Menu de jugadores");
 	
 	while (1)
@@ -21,7 +54,7 @@ void menuJugadores(HashMap * playersMap)
 		puts("3) Mostrar todos los jugadores registrados");
 		puts("4) Crear perfil");
 		puts("5) Eliminar un jugador del sistema");
-		puts("0) Salir");
+		puts("0) Volver al menú principal");
 		
 		printf(">");
 		if (!scanf("%d", &opcion))	continue;
@@ -89,7 +122,46 @@ void menuJugadores(HashMap * playersMap)
 				}
 				break;
 			case 0:
-				puts("Hasta la próxima...");
+				return;
+			default:
+				puts("Opción inválida");
+				SEP;
+				break;
+		}
+	}
+}
+
+void menuJuego(HashMap * playersMap)
+{
+	
+	int opcion;
+	system("clear");
+	writeLogo();
+	SEP;
+	puts("Menu de juego, por favor selecciona una de las siguientes opciones:");
+
+	while (1)
+	{
+		SEP;
+		puts("1) Modo 2 jugadores");
+		puts("2) Jugar contra BEC");
+		puts("0) Volver al menu principal");
+
+		printf(">");
+		if (!scanf("%d", &opcion))	continue;
+		getchar();
+
+		switch (opcion)
+		{
+			case 1:
+				twoPlayersGame();
+				break;
+
+			case 2:
+				puts("to do");
+				break;
+
+			case 0:
 				return;
 			default:
 				puts("Opción inválida");
@@ -103,11 +175,12 @@ void menuPrincipal(HashMap * playersMap)
 {
 
 	
-	int opcion;
+	char opcion = '\0';
+	system("clear");
+	writeLogo();
+	
+	printf("\nSelecciona una de las siguientes opciones:\n");
 
-	SEP;
-	printf("Bienvenid@ al menu principal, por favor, selecciona una de las siguientes opciones:");
-	SEP;
 	
 	while (1)
 	{
@@ -115,19 +188,21 @@ void menuPrincipal(HashMap * playersMap)
 		puts("2) Menu de jugadores");
 		puts("0) Salir");
 		
-		printf(">");
-		if (!scanf("%d", &opcion))	continue;
-		getchar();
+		printf(">%c",opcion);
+		opcion = getchar();
+		
+		if (!opcion )	continue;
+		
 		
 		switch	(opcion) 
 		{
-			case 1:
-				puts("to do");
+			case '1':
+				menuJuego(playersMap);
 				break;
-			case 2:
+			case '2':
 				menuJugadores(playersMap);
 				break;
-			case 0:
+			case '0':
 				puts("Hasta la próxima...");
 				return;
 			default:
