@@ -6,6 +6,7 @@
 #include "TDAs/arraylist/arraylist.h"
 #include "TDAs/tuple/tuple.h"
 #include <unistd.h>
+
 /*
 	Because we are using a international to name every object of the chess game.
  	We'll define everything in this file, using english.
@@ -26,7 +27,7 @@
 	The FEN can have 7 line breaks, there are 32 pieces, plus their positions, we could have 64 characters to indicate each piece.
 	In total, there would be 7 + 64 characters + 1 for the line break or \0
 	total = 72
-	*/
+*/
 
 // defining int id's
 
@@ -75,7 +76,7 @@ node* createNode()
 	node* new;
 	new = malloc(sizeof(node));
 	new->turn = WHITE_P;
-	
+  
 	new->anpassant = createTuple(0,0);
 	new->Wcastle = createTuple(0,0);
 	new->Bcastle = createTuple(0,0);
@@ -85,77 +86,101 @@ node* createNode()
 
 void fenToBoard(node* chess, const char* fencode)
 {
-    char i = *fencode;
-    int rank = 7; // Start from the 8th rank (0-based indexing)
-    int file = 0; // Start from the first file (column)
-
-    while (i != '\0' && i != '\n')
+  char i = *fencode;
+  int rank = 7; // Start from the 8th rank (0-based indexing)
+  int file = 0; // Start from the first file (column)
+  int numEmptySquares;
+  
+  while (i != '\0' && i != '\n')
+  {
+    switch (i)
     {
-        switch (i)
-        {
-            case 'K':
-                chess->board[rank][file++] = KING;
-                break;
-            case 'Q':
-                chess->board[rank][file++] = QUEEN;
-                break;
-            case 'R':
-                chess->board[rank][file++] = ROOK;
-                break;
-            case 'B':
-                chess->board[rank][file++] = BISHOP;
-                break;
-            case 'N':
-                chess->board[rank][file++] = KNIGHT;
-                break;
-            case 'P':
-                chess->board[rank][file++] = PAWN;
-                break;
-            case 'k':
-                chess->board[rank][file++] = king;
-                break;
-            case 'q':
-                chess->board[rank][file++] = queen;
-                break;
-            case 'r':
-                chess->board[rank][file++] = rook;
-                break;
-            case 'b':
-                chess->board[rank][file++] = bishop;
-                break;
-            case 'n':
-                chess->board[rank][file++] = knight;
-                break;
-            case 'p':
-                chess->board[rank][file++] = pawn;
-                break;
-            case '/':
-                rank--; // Skip to the next rank (row) in the chess matrix
-                file = 0; // Reset the file (column) count to 0
-                break;
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-                {
-                    int numEmptySquares = i - '0';
-                    for (int j = 0; j < numEmptySquares; j++)
-                    {
-                        chess->board[rank][file++] = 0; // Assign empty square (0) to the corresponding square in the chess matrix
-                    }
-                }
-                break;
-            default:
-                // Handle any other characters (error or unsupported characters)
-                break;
-        }
-        
-        i = *(++fencode);
+      case 'K':
+        chess->board[rank][file++] = KING;
+        break;
+      case 'Q':
+        chess->board[rank][file++] = QUEEN;
+        break;
+      case 'R':
+        chess->board[rank][file++] = ROOK;
+        break;
+      case 'B':
+        chess->board[rank][file++] = BISHOP;
+        break;
+      case 'N':
+        chess->board[rank][file++] = KNIGHT;
+        break;
+      case 'P':
+        chess->board[rank][file++] = PAWN;
+        break;
+      case 'k':
+        chess->board[rank][file++] = king;
+        break;
+      case 'q':
+        chess->board[rank][file++] = queen;
+        break;
+      case 'r':
+        chess->board[rank][file++] = rook;
+        break;
+      case 'b':
+        chess->board[rank][file++] = bishop;
+        break;
+      case 'n':
+        chess->board[rank][file++] = knight;
+        break;
+      case 'p':
+        chess->board[rank][file++] = pawn;
+        break;
+      case '/':
+        rank--; // Skip to the next rank (row) in the chess matrix
+        file = 0; // Reset the file (column) count to 0
+        break;
+      case '1':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '2':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '3':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '4':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '5':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '6':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '7':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      case '8':
+        numEmptySquares = i - '0';
+        for (int j = 0; j < numEmptySquares; j++)
+          chess->board[rank][file++] = 0;
+        break;
+      default:
+        // Handle any other characters (error or unsupported characters)
+        break;
     }
+    i = *(++fencode);
+  }
 }
 
 

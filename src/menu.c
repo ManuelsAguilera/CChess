@@ -139,9 +139,9 @@ void menuJuego(HashMap * playersMap)
 		switch (opcion)
 		{
 			case 1:
+        system("clear");
 				twoPlayersGame();
 				break;
-
 			case 2:
 				puts("\nto do");
         SEP;
