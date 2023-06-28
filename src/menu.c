@@ -3,12 +3,10 @@
 #include "players.h"
 #include "game.h"
 #include <ncurses.h>
-//#include <ncurses.h>
 
-#define SEP printf("\n**********************************\n")
+#define SEP printf("\n**********************************\n\n")
 
-
-//funcion estetica
+// Función estética
 
 void writeLogo()
 {
@@ -31,41 +29,34 @@ void writeLogo()
 	
 }
 
-
-
-//FUNCIONES DE MENU
-
-
-
+// Funciones menú
 
 void menuJugadores(HashMap * playersMap)
 {
 	int opcion;
 	char name[11];
-	SEP;
-	
-	puts("Menu de jugadores");
+
+	puts("Menú de jugadores");
 	
 	while (1)
 	{
 		SEP;
-		puts("1) Top 10 winners");
+		puts("1) Top 10 Winners");
 		puts("2) Mostrar perfil de un jugador");
 		puts("3) Mostrar todos los jugadores registrados");
 		puts("4) Crear perfil");
 		puts("5) Eliminar un jugador del sistema");
 		puts("0) Volver al menú principal");
 		
-		printf(">");
+		printf("> ");
 		if (!scanf("%d", &opcion))	continue;
 		getchar();
 		
-		switch	(opcion) 
+		switch(opcion) 
 		{
 			case 1:
 				SEP;
 				puts("Top 10 winners:");
-
 				if (showTopWinners(playersMap) != 0)
 				{
 					SEP;
@@ -73,16 +64,15 @@ void menuJugadores(HashMap * playersMap)
 				}
 				break;
 			case 2:
-				puts("Ingrese el nombre");
-				printf(">");
+				puts("\nIngrese el nombre");
+				printf("> ");
 
-				if (!scanf("%10[^\n]s", name))	break;
+				if (!scanf("%10[^\n]s",name)) break;
 				getchar();
 				
-				if (showPlayer(playersMap, name) != 0)
+				if (showPlayer(playersMap,name) != 0)
 				{
-					SEP;
-					puts("El nombre de jugador ingresado no se encuentra en el sistema");
+					puts("\nEl nombre de jugador ingresado no se encuentra en el sistema");
 				}
 				break;
 			case 3:
@@ -93,39 +83,35 @@ void menuJugadores(HashMap * playersMap)
 				}
 				break;
 			case 4:
-				puts("Ingrese el nombre");
-				printf(">");
+				puts("\nIngrese el nombre");
+				printf("> ");
 
 				if (!scanf("%10[^\n]s", name))	break;
 				getchar();
 				
 				if (createProfile(playersMap, name) != 0)
 				{
-					SEP;
-					puts("El jugador ya se encuentra en el sistema");
+					puts("\nEl jugador ya se encuentra en el sistema");
 					break;
 				}
-				SEP;
-				puts("Perfil creado correctamente");
+				puts("\nPerfil creado correctamente");
 				break;
 			case 5:
-				puts("Ingrese el nombre");
-				printf(">");
+				puts("\nIngrese el nombre");
+				printf("> ");
 
 				if (!scanf("%10[^\n]s", name))	break;
 				getchar();
 				
 				if (deletePlayer(playersMap, name) != 0)
-				{
-					SEP;
-					puts("El nombre ingresado no se encuentra en el sistema");
-				}
+					puts("\nEl nombre ingresado no se encuentra en el sistema");
+        
 				break;
 			case 0:
+        SEP;
 				return;
 			default:
-				puts("Opción inválida");
-				SEP;
+				puts("\nOpción inválida");
 				break;
 		}
 	}
@@ -133,21 +119,20 @@ void menuJugadores(HashMap * playersMap)
 
 void menuJuego(HashMap * playersMap)
 {
-	
 	int opcion;
 	system("clear");
 	writeLogo();
 	SEP;
-	puts("Menu de juego, por favor selecciona una de las siguientes opciones:");
-
+	puts("Menú de juego");
+  SEP;
+  
 	while (1)
 	{
-		SEP;
 		puts("1) Modo 2 jugadores");
 		puts("2) Jugar contra BEC");
-		puts("0) Volver al menu principal");
+		puts("0) Volver al menú principal");
 
-		printf(">");
+		printf("> ");
 		if (!scanf("%d", &opcion))	continue;
 		getchar();
 
@@ -158,13 +143,14 @@ void menuJuego(HashMap * playersMap)
 				break;
 
 			case 2:
-				puts("to do");
+				puts("\nto do");
+        SEP;
 				break;
-
 			case 0:
+        SEP;
 				return;
 			default:
-				puts("Opción inválida");
+				puts("\nOpción inválida");
 				SEP;
 				break;
 		}
@@ -173,40 +159,39 @@ void menuJuego(HashMap * playersMap)
 
 void menuPrincipal(HashMap * playersMap)
 {
-
-	
 	char opcion = '\0';
-	system("clear");
+	//system("clear");
 	writeLogo();
 	
-	printf("\nSelecciona una de las siguientes opciones:\n");
+	printf("\nSelecciona una de las siguientes opciones:\n\n");
 
-	
-	while (1)
-	{
-		puts("1) Menu de juego");
-		puts("2) Menu de jugadores");
+	while(1)
+  {
+    puts("1) Menú de juego");
+		puts("2) Menú de jugadores");
 		puts("0) Salir");
 		
-		printf(">%c",opcion);
-		opcion = getchar();
+    printf("> ");
+    opcion = getchar();
+		getchar();
+    
+		if(!opcion) continue;
 		
-		if (!opcion )	continue;
-		
-		
-		switch	(opcion) 
+		switch(opcion) 
 		{
 			case '1':
-				menuJuego(playersMap);
+				SEP;
+        menuJuego(playersMap);
 				break;
 			case '2':
+        SEP;
 				menuJugadores(playersMap);
 				break;
 			case '0':
-				puts("Hasta la próxima...");
+        puts("\nHasta la próxima...\n");
 				return;
 			default:
-				puts("Opción inválida");
+				puts("\nOpción inválida");
 				SEP;
 				break;
 		}

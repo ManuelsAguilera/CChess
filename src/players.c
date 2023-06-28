@@ -127,7 +127,7 @@ int showPlayer(HashMap * playersMap, char * name)
 	player * perfil = par->value;
 	SEP;
 	printf("> %s\n", perfil->name);
-	printf("%ld victorias\n", perfil->wins);
+	printf("%ld victorias", perfil->wins);
 	
 	return 0;
 }
@@ -156,6 +156,7 @@ int deletePlayer(HashMap * playersMap, char * name)
 	
 	eraseMap(playersMap, name);
 	
+  puts("\nEl jugador fue eliminado correctamente");
 	return 0;
 }
 

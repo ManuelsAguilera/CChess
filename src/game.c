@@ -95,7 +95,7 @@ tuple* readTuple()
 tuple* readChessCoords()
 {
 	char chessCoord[2];
-	scanf("%s",chessCoord);
+	//scanf("%s",chessCoord);
 	getchar();
 	const char* index_str = "ABCDEFGH";
 	int x=-1;
@@ -116,332 +116,104 @@ tuple* readChessCoords()
 	
 }
 
-int comprobarTorre(tuple * mov_start, tuple * mov_end)
+int comprobarTorre(tuple* mov_start,tuple* mov_end)
 {
-	tuple * mov1 = createTuple(1, 0);
-	tuple * mov2 = createTuple(0, 1);
-	tuple * mov3 = createTuple(-1, 0);
-	tuple * mov4 = createTuple(0, -1);
+	printf("\nComprobando\n");
+	//get a tuple of the movement, to compare with 0,1 1,0 scalars
+	tuple* copia;
+	tuple* movs[16];
+	ArrayList* vectorMovs = createList();
 	
-	tuple * copia = createTuple(mov_start->x, mov_start->y);
+	for (int k = 0; k < 8; k++)
+		{
+			movs[k] = createTuple(0,k+1);
+			movs[(k*2) + 1] = createTuple(k+1, 0);
+		}
 
+	linearCombination(movs,vectorMovs);
+	cpyTuple(copia,mov_start);
 	substractTuple(copia, mov_end);
 
-	if (cmpTuple(copia, mov1) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		return 1;
-	}
+	for (int i = 0; i < get_size(vectorMovs); i++)
+		{
+			//cmp returns 0 or 1
+			if (cmpTuple(copia,get(vectorMovs,i)) ) 
+				return 1;
+		}
 
-	if (cmpTuple(copia, mov2) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov3) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov4) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		return 1;
-	}
-	
+	for (int k = 0; k < 16; k++)
+		{
+			nullifyTuple(movs[k]);
+		}
+	nullifyTuple(copia);
+	clean(vectorMovs);
 	return 0;
 }
 
 int comprobarCaballo(tuple * mov_start, tuple * mov_end)
 {
-	tuple * mov1 = createTuple(2, 1);
-	tuple * mov2 = createTuple(2, -1);
-	tuple * mov3 = createTuple(-2, 1);
-	tuple * mov4 = createTuple(-2, -1);
-	tuple * mov5 = createTuple(1, 2);
-	tuple * mov6 = createTuple(1, -2);
-	tuple * mov7 = createTuple(-1, 2);
-	tuple * mov8 = createTuple(-1, -2);
+	printf("\nComprobando\n");
+	ArrayList* vectorMovs = createList();
+	tuple * movs[2];
+	movs[0] = createTuple(1,2); movs[1] = createTuple(2,1);
+	linearCombination(movs, vectorMovs);
 	
 	tuple * copia = createTuple(mov_start->x, mov_start->y);
-
 	substractTuple(copia, mov_end);
 
-	if (cmpTuple(copia, mov1) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov2) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov3) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov4) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov5) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov6) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov7) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov8) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
+	for (int i = 0; i < get_size(vectorMovs); i++)
+		{
+			//cmp returns 0 or 1
+			if (cmpTuple(copia,get(vectorMovs,i)) ) 
+				return 1;
+		}
+	
 	return 0;
 }
 
 int comprobarRey(tuple * mov_start, tuple * mov_end)
 {
-	tuple * mov1 = createTuple(1, 0);
-	tuple * mov2 = createTuple(0, 1);
-	tuple * mov3 = createTuple(-1, 0);
-	tuple * mov4 = createTuple(0, -1);
-	tuple * mov5 = createTuple(1, 1);
-	tuple * mov6 = createTuple(1, -1);
-	tuple * mov7 = createTuple(-1, 1);
-	tuple * mov8 = createTuple(-1, -1);
-	
-	tuple * copia = createTuple(mov_start->x, mov_start->y);
+	printf("\nComprobando\n");
+	ArrayList* vectorMovs = createList();
+	tuple* movs[2];
+	tuple* aux; //helps pointing to arraylist
+	movs[0] = createTuple(1,0); movs[1] = createTuple(0,1);
+	//obtains all posible vector movements.
+	linearCombination(movs,vectorMovs); 
+	tuple* copia;
 
+	cpyTuple(copia,mov_start);
 	substractTuple(copia, mov_end);
 
-	if (cmpTuple(copia, mov1) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
+	for (int i = 0; i < get_size(vectorMovs); i++)
+		{
+			//cmp returns 0 or 1
+			if (cmpTuple(copia,get(vectorMovs,i)) ) 
+				return 1;
+		}
 
-	if (cmpTuple(copia, mov2) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov3) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov4) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov5) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov6) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov7) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
-
-	if (cmpTuple(copia, mov8) == 1)
-	{
-		free(copia);
-		free(mov1);
-		free(mov2);
-		free(mov3);
-		free(mov4);
-		free(mov5);
-		free(mov6);
-		free(mov7);
-		free(mov8);
-		return 1;
-	}
+	nullifyTuple(copia);
+	nullifyTuple(movs[0]); nullifyTuple(movs[1]);
+	clean(vectorMovs);
 
 	return 0;
 }
 
 int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 {
-	if (board[mov_start->x][mov_start->y] == 1 || board[mov_start->x][mov_start->y] == 10)
+	if (board[mov_start->x][mov_start->y] == king || board[mov_start->x][mov_start->y] == KING)
 		return comprobarRey(mov_start, mov_end);
+	
 	if (board[mov_start->x][mov_start->y] == 2 || board[mov_start->x][mov_start->y] == 20)
 		return 1;
-	if (board[mov_start->x][mov_start->y] == 3 || board[mov_start->x][mov_start->y] == 30)
+	if (board[mov_start->x][mov_start->y] % ROOK == 0)
 		return comprobarTorre(mov_start, mov_end);
+	
 	if (board[mov_start->x][mov_start->y] == 4 || board[mov_start->x][mov_start->y] == 40)
 		return 1;
 	if (board[mov_start->x][mov_start->y] == 5 || board[mov_start->x][mov_start->y] == 50)
 		return comprobarCaballo(mov_start, mov_end);
+	
 	if (board[mov_start->x][mov_start->y] == 6 || board[mov_start->x][mov_start->y] == 60)
 		return 1;
 }
@@ -456,7 +228,7 @@ int twoPlayersGame()
 	
 	while(1)
 	{
-		system("clear");
+		//system("clear");
 		printf("----------------------\n");
 		printf(" AJEDREZ MULTIJUGADOR\n");
 		printf("----------------------\n");

@@ -1,6 +1,10 @@
 #ifndef ArrayList_h
 #define ArrayList_h
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
 typedef struct ArrayList ArrayList;
 typedef struct Stack Stack;
 

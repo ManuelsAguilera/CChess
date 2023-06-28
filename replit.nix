@@ -1,6 +1,10 @@
 { pkgs }: {
     deps = [
-		pkgs.nodePackages.prettier
+		pkgs.sudo
+  		pkgs.run
+  		pkgs.nodePackages.prettier
         pkgs.cowsay
-    ];
-}
+		pkgs.gcc
+		pkgs.ncurses
+	];
+} 

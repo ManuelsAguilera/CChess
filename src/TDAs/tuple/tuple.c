@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "../arraylist/arraylist.h"
 
 typedef struct tuple {
 	int x;
@@ -22,6 +23,10 @@ void nullifyTuple(tuple* T)
 	T=NULL;
 }
 
+void cpyTuple(tuple* newCopy, tuple* current)
+{
+	newCopy = createTuple(current->x,current->y);
+}
 
 
 void sumTuple(tuple* summand1,tuple* summand2)
@@ -75,6 +80,35 @@ void divideTuple(tuple* dividend,tuple* divisor) //this is int division
 		return;
 	}
 
+//This only is an implementation for us.
+//it will not have all the linearCombinations posible
+//it only appends linear combination of each scalated with 1 and -1
+//of 2 vectors
+
+void linearCombination(tuple* vectors[], ArrayList* storage )
+{
+	int scalars[8] = {1,1 ,-1,-1, -1,1, -1,1};
+	tuple* copy[2];
+	cpyTuple(copy[0],vectors[0]);
+	cpyTuple(copy[1],vectors[1]);
+		
+	for (int index_array = 0; index_array < 8;index_array+=2 ) //this counter is to use scalars
+		{
+			scaleTuple(copy[0],scalars[index_array]);
+			scaleTuple(copy[1],scalars[index_array+1]);
+			
+			sumTuple( copy[0] ,copy[1]);
+			
+			append(storage,copy[0]);
+			nullifyTuple(copy[0]); nullifyTuple(copy[1]);
+			//restore data
+			cpyTuple(copy[0],vectors[0]);
+			cpyTuple(copy[1],vectors[1]);
+		}
+	//delete data used in function
+	nullifyTuple(copy[0]); nullifyTuple(copy[1]);
+}
+
 int cmpTuple(tuple* first,tuple* second)
 {
 	
@@ -84,3 +118,20 @@ int cmpTuple(tuple* first,tuple* second)
 	//<else
 	return 0;	
 }
+
+
+/*int main()
+{
+	printf("Testing\n");
+	tuple* mov[2];
+	mov[0] = createTuple(0,1);
+	mov[1] = createTuple(1,0);
+
+	ArrayList* New = createList();
+	linearCombination(mov, New);
+
+	
+	for (int i  = 0; i < get_size(New); i++)
+		printf("%2d,%d",*get(New,i)->x,*get(New,i)->y);
+	
+}*/
