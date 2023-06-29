@@ -88,79 +88,133 @@ tuple* findPiece(int board[8][8],int ID)
 
 int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]){
   printf("\nComprobando REY\n");
-  int startRow = mov_start->y - '0';
-  int startCol = mov_start->x - 'A';
-  int endRow = mov_end->y - '0';
-  int endCol = mov_end->x - 'A';
+  int startRow = mov_start->y ;
+  int startCol = mov_start->x;
+  int endRow = mov_end->y;
+  int endCol = mov_end->x;
   int rowDiff = abs(endRow - startRow);
   int colDiff = abs(endCol - startCol);
 
   if(rowDiff <= 1 && colDiff <= 1){
-    if(board[mov_start->y][mov_start->x]==1){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0)
+    if(board[startRow][startCol]==1){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0)
         return 1;
     }  
-    if(board[mov_start->y][mov_start->x]==10){
-      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0)
+    if(board[startRow][startCol]==10){
+      if(board[endRow][endCol]<7 || board[endRow][endCol]==0)
         return 1;
     }
   }
-  
   return 0;
 }
 
-int comprobarReina(tuple* mov_start, tuple* mov_end){
-  printf("\nComprobando REINA\n");
-	//if(comprobarTorre(mov_start,mov_end)==1 && comprobarAlfil(mov_start,mov_end)==1)
-    //return 1;
-  //return 0;
-  return 1;
+int comprobarReina(tuple* mov_start, tuple* mov_end, int board[8][8]){
+  int rowDiff = abs(mov_end->y - mov_start->y);
+  int colDiff = abs(mov_end->x - mov_start->x);
+
+  if(rowDiff==colDiff) return comprobarAlfil(mov_start,mov_end,board);
+  if(rowDiff>0 && colDiff==0) return comprobarTorre(mov_start,mov_end,board);
+  if(rowDiff==0 && colDiff>0) return comprobarTorre(mov_start,mov_end,board);
+  return 0;
 }
 
-
-int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
-{
-	printf("Probar Torre");
-	tuple* vectorMov = createTuple(mov_end->x, mov_end->y);
-	
-	
-	
-	substractTuple(vectorMov,mov_start); //movement of piece
-	
-	//proving that a movement has form x(1,0) or x(0,1)
-	if ( !(vectorMov->x == 0 ^ vectorMov->y ==0) ) return 0;// xor
-	
-	//if vector has the form, then get wich form
-	tuple* form = (vectorMov->x == 0)?createTuple(0,1): createTuple(1,0);
-	
-	//now just check it isnt jumping any pieces.
-	if (vectorMov->x > 0 || vectorMov->y >0) //if is positive
-		for (int i = 1; i < 7; i++)
-			{
-				
-				scaleTuple(form,i);
-				
-				if ( cmpTuple(form,vectorMov)  == 1) //si es el mov
-					return 0;
-				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
-				if (board[form->y][form->x]  != BLANK) 
-					return 0;
-	
-			}
-	else 
-		for (int i = -1; i > 7; i--)
-			{
-				scaleTuple(form,i);
-				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
-				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
-					return 0;
-				
-				if (board[form->y][form->x]  != BLANK) 
-					return 0;
-	
-			}
-	
-	return 1;
+int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
+  int startRow = mov_start->y ;
+  int startCol = mov_start->x;
+  int endRow = mov_end->y;
+  int endCol = mov_end->x;
+  int rowDiff = abs(endRow - startRow);
+  int colDiff = abs(endCol - startCol);
+  
+  if(rowDiff>0 && colDiff==0){
+    if(board[mov_start->y][mov_start->x]==3 || board[mov_start->y][mov_start->x]==2){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+        if(rowDiff>1){
+          if(startRow<endRow){
+            for(int i=1;i<rowDiff;i++){
+              if(board[startRow+i][startCol]!=0){
+                return 0;
+              }
+            }
+          }
+          if(startRow>endRow){
+            for(int i=1;i<colDiff;i++){
+              if(board[startRow-i][startCol]!=0){
+                return 0;
+              }
+            }
+          }
+        }
+        return 1;
+      }
+    }
+    if(board[mov_start->y][mov_start->x]==30 || board[mov_start->y][mov_start->x]==20){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+        if(rowDiff>1){
+          if(startRow<endRow){
+            for(int i=1;i<rowDiff;i++){
+              if(board[startRow+i][startCol]!=0){
+                return 0;
+              }
+            }
+          }
+          if(startRow>endRow){
+            for(int i=1;i<colDiff;i++){
+              if(board[startRow-i][startCol]!=0){
+                return 0;
+              }
+            }
+          }
+        }
+        return 1;
+      }
+    }
+  }
+  if(rowDiff==0 && colDiff>0){
+    if(board[mov_start->y][mov_start->x]==3 || board[mov_start->y][mov_start->x]==2){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+        if(rowDiff>1){
+          if(startRow<endRow){
+            for(int i=1;i<rowDiff;i++){
+              if(board[startRow][startCol+i]!=0){
+                return 0;
+              }
+            }
+          }
+          if(startRow>endRow){
+            for(int i=1;i<colDiff;i++){
+              if(board[startRow][startCol-i]!=0){
+                return 0;
+              }
+            }
+          }
+        }
+        return 1;
+      }
+    }
+    if(board[mov_start->y][mov_start->x]==30 || board[mov_start->y][mov_start->x]==20){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+        if(rowDiff>1){
+          if(startRow<endRow){
+            for(int i=1;i<rowDiff;i++){
+              if(board[startRow][startCol+i]!=0){
+                return 0;
+              }
+            }
+          }
+          if(startRow>endRow){
+            for(int i=1;i<colDiff;i++){
+              if(board[startRow][startCol-i]!=0){
+                return 0;
+              }
+            }
+          }
+        }
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
 
 int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
@@ -172,7 +226,7 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
   int colDiff = abs(endCol - startCol);
 
   if(rowDiff == colDiff){
-    if(board[mov_start->y][mov_start->x]==4){
+    if(board[mov_start->y][mov_start->x]==4 || board[mov_start->y][mov_start->x]==2){
       if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
         if(rowDiff>1){
           if(startCol<endCol){
@@ -211,7 +265,7 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
         return 1;
       }
     }
-    if(board[mov_start->y][mov_start->x]==40){
+    if(board[mov_start->y][mov_start->x]==40 || board[mov_start->y][mov_start->x]==20){
       if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0){
         if(rowDiff>1){
           if(startCol<endCol){
@@ -254,8 +308,8 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
   return 0;
 }
 
-
-int comprobarCaballo(tuple* mov_start, tuple* mov_end)
+//(2,1) (2,-1) (-2,1) (-2,-1) (1,2) (1,-2) (-1,2) (-1,-2)
+int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8])
 {
 	printf("\nComprobando CABALLO\n");
 	ArrayList* vectorMovs = createList();
@@ -292,13 +346,13 @@ int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 	if (board[mov_start->y][mov_start->x] == KING || board[mov_start->y][mov_start->x] == king)
 		return comprobarRey(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == QUEEN || board[mov_start->y][mov_start->x] == queen)
-		return comprobarReina(mov_start, mov_end);
+		return comprobarReina(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == ROOK || board[mov_start->y][mov_start->x] == rook)
 		return comprobarTorre(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == BISHOP || board[mov_start->y][mov_start->x] == bishop)
 		return comprobarAlfil(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == KNIGHT || board[mov_start->y][mov_start->x] == knight)
-		return comprobarCaballo(mov_start, mov_end);
+		return comprobarCaballo(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == PAWN || board[mov_start->y][mov_start->x] == pawn)
 		return comprobarPeon(mov_start, mov_end, board);
 }
@@ -408,7 +462,35 @@ void fenToBoard(node* chess, const char* fencode)
 
 
 
+void kingMove(node* chess, tuple* piece, ArrayList* storage)
+{
+    tuple* vectors[2];
+    vectors[0] = createTuple(1, 0);
+    vectors[1] = createTuple(0, 1);
 
+    linearCombination(vectors, storage);
+    // Now we have all directions
+
+    // Add a tuple copy that adds to the initial position of the piece to check
+    tuple* initialPos = createTuple(piece->x, piece->y);
+
+    for (int i = 1; i < 5; i++) {
+        tuple* newPos = sumTuple(initialPos, get(storage, i * -1));
+        if (comprobarMovimiento(chess->board, newPos) == 0)
+            pop(storage, i * -1);
+
+        // Clean up the memory
+        nullifyTuple(newPos);
+    }
+
+    // Clean up the memory
+    nullifyTuple(initialPos);
+}
+
+
+
+
+/*
 void kingMove(node* chess, tuple* piece,ArrayList* storage)
 {
 	tuple* vectors[2];
@@ -418,22 +500,18 @@ void kingMove(node* chess, tuple* piece,ArrayList* storage)
 	linearCombination(vectors,storage);
 	//Now we got all directions 
 	
-	/* Agregar un tuple cpy que se sume a la pos inicial de la pieza, para comprobar.
+	/* Agregar un tuple cpy que se sume a la pos inicial de la pieza, para comprobar
 	for (int i=1; i <5; i++)
 		if (comprobarMovimiento(chess->board, get(storage,i*-1)) == 0)
 			pop(storage,i*-1);
-	*/
-}
+}	*/
 
-ArrayList* bishopMove(node*,tuple*,ArrayList*)
+
+void bishopMove(node*,tuple*,ArrayList*)
 {
-	/*tuple* vectors[2];
-	vectors[0] = createTuple(1,0);
-	vectors[0] = createTuple(0,1);
-
-	linearCombination(vectors,storage);*/
-	//Now we got all directions
-	
+	//similar aproach, but with each new vector, you'll have to scale it till it touches border of matrix
+	//or finds another piece
+	return;
 }
 ArrayList* rookMove(node*,tuple);
 
