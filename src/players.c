@@ -77,6 +77,8 @@ player * validatePlayer(HashMap * playersMap)
 	
 }
 
+
+
 HashMap* readPlayers()
 {
 	HashMap* map = createMap(10);
@@ -187,4 +189,14 @@ int showTopWinners(HashMap * playersMap)
 		cont++;
 	}
 	return 0;
+}
+
+
+void addWin(HashMap * playersMap, char * name,long cant)
+{
+	Pair* current = searchMap(playersMap,name);
+	if (current == NULL) return;
+	player* pCurrent = (player*) current->value;
+	pCurrent->wins +=cant;
+	return;
 }

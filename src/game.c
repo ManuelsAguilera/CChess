@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include "players.h"
 #include "TDAs/arraylist/arraylist.h"
 #include "TDAs/tuple/tuple.h"
 #include <unistd.h>
@@ -119,171 +120,17 @@ tuple* readChessCoords()
 	
 }
 
-int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  printf("\nComprobando REY\n");
-  int startRow = mov_start->y - '0';
-  int startCol = mov_start->x - 'A';
-  int endRow = mov_end->y - '0';
-  int endCol = mov_end->x - 'A';
-  int rowDiff = abs(endRow - startRow);
-  int colDiff = abs(endCol - startCol);
 
-  if(rowDiff <= 1 && colDiff <= 1){
-    if(board[mov_start->y][mov_start->x]==1){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0)
-        return 1;
-    }  
-    if(board[mov_start->y][mov_start->x]==10){
-      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0)
-        return 1;
-    }
-  }
-  
-  return 0;
-}
-
-int comprobarReina(tuple* mov_start, tuple* mov_end){
-  printf("\nComprobando REINA\n");
-	//if(comprobarTorre(mov_start,mov_end)==1 && comprobarAlfil(mov_start,mov_end)==1)
-    //return 1;
-  //return 0;
-  return 1;
-}
-
-
-int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
-{
-	printf("Probar Torre");
-	tuple* vectorMov = createTuple(mov_end->x, mov_end->y);
-	
-	
-	
-	substractTuple(vectorMov,mov_start); //movement of piece
-	
-	//proving that a movement has form x(1,0) or x(0,1)
-	if ( !(vectorMov->x == 0 ^ vectorMov->y ==0) ) return 0;// xor
-	
-	//if vector has the form, then get wich form
-	tuple* form = (vectorMov->x == 0)?createTuple(0,1): createTuple(1,0);
-	
-	//now just check it isnt jumping any pieces.
-	if (vectorMov->x > 0 || vectorMov->y >0) //if is positive
-		for (int i = 1; i < 7; i++)
-			{
-				
-				scaleTuple(form,i);
-				
-				if ( cmpTuple(form,vectorMov)  == 1) //si es el mov
-					return 0;
-				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
-				if (board[form->y][form->x]  != BLANK) 
-					return 0;
-	
-			}
-	else 
-		for (int i = -1; i > 7; i--)
-			{
-				scaleTuple(form,i);
-				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
-				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
-					return 0;
-				
-				if (board[form->y][form->x]  != BLANK) 
-					return 0;
-	
-			}
-	
-	return 1;
-}
-
-int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  printf("\nComprobando ALFIL\n");
-  int startRow = mov_start->y - '0';
-  int startCol = mov_start->x - 'A';
-  int endRow = mov_end->y - '0';
-  int endCol = mov_end->x - 'A';
-  int rowDiff = abs(endRow - startRow);
-  int colDiff = abs(endCol - startCol);
-
-  if(rowDiff == colDiff){
-    if(board[mov_start->y][mov_start->x]==4){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
-        if(rowDiff>1){
-          
-        }
-        return 1;
-      }
-    }  
-    if(board[mov_start->y][mov_start->x]==40){
-      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0)
-        return 1;
-    }
-  }
-  
-  return 0;
-}
-/*
-int comprobarAlfil(tuple* mov_start,tuple* mov_end){
-  printf("\nComprobando ALFIL\n");
-  return 1;
-}*/
-
-int comprobarCaballo(tuple* mov_start, tuple* mov_end)
-{
-	printf("\nComprobando CABALLO\n");
-	ArrayList* vectorMovs = createList();
-	tuple * movs[2];
-	movs[0] = createTuple(1,2); movs[1] = createTuple(2,1);
-	linearCombination(movs, vectorMovs);
-	
-	tuple * copia = createTuple(mov_start->x, mov_start->y);
-	substractTuple(copia, mov_end);
-
-	for (int i = 0; i < get_size(vectorMovs); i++)
-		{
-			//cmp returns 0 or 1
-			if (cmpTuple(copia,get(vectorMovs,i)) ) 
-				return 1;
-		}
-	
-	return 0;
-}
-
-int comprobarPeon(tuple* mov_start, tuple* mov_end){
-  printf("\nComprobando PEÓN\n");
-  return 1;
-}
-
-int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
-{
- //if returns 0 then an error happened
-	
-	if (mov_start == NULL || mov_end ==NULL)
-    	return 0;
-	if (board[mov_start->y][mov_start->x] == BLANK)
-		return 0;
-	if (board[mov_start->y][mov_start->x] == KING || board[mov_start->x][mov_start->y] == king)
-		return comprobarRey(mov_start, mov_end, board);
-	if (board[mov_start->y][mov_start->x] == QUEEN || board[mov_start->x][mov_start->y] == queen)
-		return comprobarReina(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == ROOK || board[mov_start->x][mov_start->y] == rook)
-		return comprobarTorre(mov_start, mov_end,board);
-	if (board[mov_start->y][mov_start->x] == BISHOP || board[mov_start->x][mov_start->y] == bishop)
-		return comprobarAlfil(mov_start, mov_end, board);
-	if (board[mov_start->y][mov_start->x] == KNIGHT || board[mov_start->x][mov_start->y] == knight)
-		return comprobarCaballo(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == PAWN || board[mov_start->x][mov_start->y] == pawn)
-		return comprobarPeon(mov_start, mov_end);
-}
 
 int twoPlayersGame()
 {
-	node* currentBoard = createNode();
-	fenToBoard(currentBoard,"rnbqkbnr/8/2p2p2/8/8/8/7P/RNBQKBNR");
-	//fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+	
+	node* currentBoard = createNode(WHITE_P);
+	//fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/7P/RNBQKBNR");
+	fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 	tuple* mov_end = NULL;
 	tuple* mov_start = NULL;
-	
+	int checkmate;
 	while(1)
 	{
 		//system("clear");
@@ -299,8 +146,8 @@ int twoPlayersGame()
 		mov_end=readChessCoords();
 
     // para checkear qué hay en las posiciones seleccionadas
-    printf("\ninicio %d\n",currentBoard->board[mov_start->y][mov_start->x]);
-    printf("\nfinal %d\n",currentBoard->board[mov_end->y][mov_end->x]);
+    printf("\npos inicial %d\n",currentBoard->board[mov_start->y][mov_start->x]);
+    printf("pos final %d\n",currentBoard->board[mov_end->y][mov_end->x]);
 
 		while (comprobarMovimiento(mov_start, mov_end, currentBoard->board) != 1)
 		{
@@ -312,6 +159,10 @@ int twoPlayersGame()
 		}
     	
 		currentBoard = changePos(currentBoard,mov_start,mov_end);
+		checkmate = findJaqueMate(currentBoard,mov_end);
+		if (checkmate == CHECKMATE)
+			return 1;
+		
 	}
 	
 	

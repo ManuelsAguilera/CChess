@@ -117,6 +117,32 @@ void menuJugadores(HashMap * playersMap)
 	}
 }
 
+char* ingresarPlayer(HashMap* playersMap) {
+    char response;
+    char* name = (char*)malloc(sizeof(char) * 50); // Reserva memoria para el nombre
+    
+    while (1) {
+        system("clear");
+        printf("¿Quieres jugar con un usuario anterior o hacer uno nuevo? (y/n)\n");
+        scanf(" %c", &response); // Corregido para leer un solo carácter
+        
+        if (response == 'y') {
+            printf("Ingresa tu nombre: ");
+            scanf("%s", name);
+            
+            Pair* current = searchMap(playersMap, name);
+            if (current != NULL)
+                return (char*)current->key;
+        } else if (response == 'n') {
+            printf("Deberás crear un nuevo usuario. Ingresa tu nombre:\n");
+            scanf("%s", name);
+
+            createProfile(playersMap, name);
+            return name;
+        }
+    }
+}
+
 void menuJuego(HashMap * playersMap)
 {
 	int opcion;
@@ -140,7 +166,10 @@ void menuJuego(HashMap * playersMap)
 		{
 			case 1:
         system("clear");
-				twoPlayersGame();
+				char* Jugador = ingresarPlayer(playersMap);
+				addWin(playersMap,Jugador,twoPlayersGame());
+				
+				showPlayer(playersMap,Jugador);
 				break;
 			case 2:
 				puts("\nto do");

@@ -39,6 +39,10 @@
 //no piece
 #define BLANK 0
 
+//jaque and jaQUEMATE
+#define CHECK 100
+#define CHECKMATE 110
+
 typedef char string[MAXCHAR];
 typedef struct chessboard {
 	int turn; //indicates wich player has to play
@@ -55,6 +59,16 @@ typedef struct chessboard {
 
 
 node* createNode();
+
+//comprobar funciones
+int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]);
+int comprobarReina(tuple* mov_start, tuple* mov_end);
+int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]);
+int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]);
+int comprobarCaballo(tuple* mov_start, tuple* mov_end);
+int comprobarPeon(tuple* mov_start, tuple* mov_end);
+int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8]);
+
 
 void fenToBoard(node* chess, const char* fencode);
 

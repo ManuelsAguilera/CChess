@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include "players.h"
 #include "TDAs/arraylist/arraylist.h"
 #include "TDAs/tuple/tuple.h"
 #include <unistd.h>

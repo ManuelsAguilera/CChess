@@ -12,6 +12,7 @@ typedef struct HashMap HashMap;
 struct player
 {
 	char * name;
+	long wins; 
 };
 
 typedef struct player player;
@@ -20,6 +21,7 @@ HashMap * readPlayers();
 player * createPlayer(char * name);
 player * validatePlayer(HashMap * playersMap);
 
+void addWin(HashMap * playersMap, char * name,long cant);
 int showPlayer(HashMap * playersMap, char * name);
 int showAllPlayers(HashMap * playersMap);
 int deletePlayer(HashMap * playersMap, char * name);
