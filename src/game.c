@@ -100,88 +100,96 @@ tuple* readChessCoords()
 	getchar();
   
 	const char* index_str = "ABCDEFGH";
-	int x=-1;
+	int x=-1; //just to initialize
 	int y;
 
 	for(int i=0; i<8; i++)
-		if (index_str[i]==chessCoord[0])
+		if (index_str[i] == chessCoord[0] )
 			x = i;
+
 	
-	if (x==-1) assert("Coordenada mal introducida");
-	if (isalnum(chessCoord[1])==0) assert("Coordenada mal introducida");
+	if (x==-1) return NULL;
+	if (isalnum(chessCoord[1])==0) return NULL;
 	y = (int)atoi(&chessCoord[1]);
 
-	if (y >8 || y<1) assert("Coordenada mal introducida");
+	if (y >8 || y<1) return NULL;
+
 
 	return createTuple(x,y-1);
 	
 }
 
-int comprobarRey(tuple* mov_start, tuple* mov_end)
-{
-	printf("\nComprobando REY\n");
-	ArrayList* vectorMovs = createList();
-	tuple* movs[2];
-	tuple* aux; //helps pointing to arraylist
-	movs[0] = createTuple(1,0); movs[1] = createTuple(0,1);
-	//obtains all posible vector movements.
-	linearCombination(movs,vectorMovs); 
-	tuple* copia;
+int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]){
+  printf("\nComprobando REY\n");
+  int startRow = mov_start->y - '0';
+  int startCol = mov_start->x - 'A';
+  int endRow = mov_end->y - '0';
+  int endCol = mov_end->x - 'A';
+  int rowDiff = abs(endRow - startRow);
+  int colDiff = abs(endCol - startCol);
 
-	cpyTuple(copia,mov_start);
-	substractTuple(copia, mov_end);
-
-	for (int i = 0; i < get_size(vectorMovs); i++)
-		{
-			//cmp returns 0 or 1
-			if (cmpTuple(copia,get(vectorMovs,i)) ) 
-				return 1;
-		}
-
-	nullifyTuple(copia);
-	nullifyTuple(movs[0]); nullifyTuple(movs[1]);
-	clean(vectorMovs);
-
-	return 0;
+  if(rowDiff <= 1 && colDiff <= 1){
+    if(board[mov_start->y][mov_start->x]==1){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0)
+        return 1;
+    }  
+    if(board[mov_start->y][mov_start->x]==10){
+      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0)
+        return 1;
+    }
+  }
+  
+  return 0;
 }
+
 
 int comprobarReina(tuple* mov_start, tuple* mov_end){
   printf("\nComprobando REINA\n");
+	//if(comprobarTorre(mov_start,mov_end)==1 && comprobarAlfil(mov_start,mov_end)==1)
+    //return 1;
+  //return 0;
   return 1;
 }
 
-int comprobarTorre(tuple* mov_start,tuple* mov_end)
+
+int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
 {
-	printf("\nComprobando TORRE\n");
-	//get a tuple of the movement, to compare with 0,1 1,0 scalars
-	tuple* copia;
-	tuple* movs[16];
-	ArrayList* vectorMovs = createList();
+	printf("ProbarTprre");
+	tuple* vectorMov = createTuple(0,0);
+	cpyTuple(vectorMov,mov_end);
+	printf("\nv %d,%d",mov_end->x,mov_end->y);
+	substractTuple(vectorMov,mov_start); //movement of piece
+	//proving that a movement has form x(1,0) or x(0,1)
+	if ( (vectorMov->x == 0 ^ vectorMov->y ==0) ) return 0;// xor
 	
-	for (int k = 0; k < 8; k++)
-		{
-			movs[k] = createTuple(0,k+1);
-			movs[(k*2) + 1] = createTuple(k+1, 0);
-		}
-
-	linearCombination(movs,vectorMovs);
-	cpyTuple(copia,mov_start);
-	substractTuple(copia, mov_end);
-
-	for (int i = 0; i < get_size(vectorMovs); i++)
-		{
-			//cmp returns 0 or 1
-			if (cmpTuple(copia,get(vectorMovs,i)) ) 
-				return 1;
-		}
-
-	for (int k = 0; k < 16; k++)
-		{
-			nullifyTuple(movs[k]);
-		}
-	nullifyTuple(copia);
-	clean(vectorMovs);
-	return 0;
+	//if vector has the form, then get wich form
+	tuple* form = (vectorMov->x == 0)?createTuple(0,1): createTuple(1,0);
+	//printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
+	//now just check it isnt jumping any pieces.
+	if (vectorMov->x > 0 || vectorMov->y >0) //if is positive
+		for (int i = 1; i < 7; i++)
+			{
+				scaleTuple(form,i);
+				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
+					return 1;
+				
+				if (board[form->y][form->x]  != BLANK) 
+					return 0;
+	
+			}
+	else 
+		for (int i = -1; i > 7; i--)
+			{
+				scaleTuple(form,i);
+				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
+					return 1;
+				
+				if (board[form->y][form->x]  != BLANK) 
+					return 0;
+	
+			}
+	
+	return 1;
 }
 
 int comprobarAlfil(tuple* mov_start,tuple* mov_end){
@@ -217,20 +225,23 @@ int comprobarPeon(tuple* mov_start, tuple* mov_end){
 
 int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 {
-  if (board[mov_start->y][mov_start->x] == 0){
-    printf("No");
-		return 0;}
-	if (board[mov_start->y][mov_start->x] == 1 || board[mov_start->x][mov_start->y] == 10)
-		return comprobarRey(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == 2 || board[mov_start->x][mov_start->y] == 20)
+ //if returns 0 then an error happened
+	
+	if (mov_start == NULL || mov_end ==NULL)
+    	return 0;
+	if (board[mov_start->y][mov_start->x] == BLANK)
+		return 0;
+	if (board[mov_start->y][mov_start->x] == KING || board[mov_start->x][mov_start->y] == king)
+		return comprobarRey(mov_start, mov_end, board);
+	if (board[mov_start->y][mov_start->x] == QUEEN || board[mov_start->x][mov_start->y] == queen)
 		return comprobarReina(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == 3 || board[mov_start->x][mov_start->y] == 30)
-		return comprobarTorre(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == 4 || board[mov_start->x][mov_start->y] == 40)
+	if (board[mov_start->y][mov_start->x] == ROOK || board[mov_start->x][mov_start->y] == rook)
+		return comprobarTorre(mov_start, mov_end,board);
+	if (board[mov_start->y][mov_start->x] == BISHOP || board[mov_start->x][mov_start->y] == bishop)
 		return comprobarAlfil(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == 5 || board[mov_start->x][mov_start->y] == 50)
+	if (board[mov_start->y][mov_start->x] == KNIGHT || board[mov_start->x][mov_start->y] == knight)
 		return comprobarCaballo(mov_start, mov_end);
-	if (board[mov_start->y][mov_start->x] == 6 || board[mov_start->x][mov_start->y] == 60)
+	if (board[mov_start->y][mov_start->x] == PAWN || board[mov_start->x][mov_start->y] == pawn)
 		return comprobarPeon(mov_start, mov_end);
 }
 
@@ -252,12 +263,14 @@ int twoPlayersGame()
     
 		printf("\nIngresa las coordenadas de la pieza que quieres mover:\n");
 		mov_start=readChessCoords();
+
 		printf("\nIngresa qué movimiento quieres hacer:\n");
 		mov_end=readChessCoords();
 
+    // para checkear qué hay en las posiciones seleccionadas
     printf("\ninicio %d\n",currentBoard->board[mov_start->y][mov_start->x]);
     printf("\nfinal %d\n",currentBoard->board[mov_end->y][mov_end->x]);
-    
+
 		while (comprobarMovimiento(mov_start, mov_end, currentBoard->board) != 1)
 		{
 			printf("\nEl movimiento ingresado no es válido, por favor ingresa uno que lo sea\n");
@@ -266,7 +279,7 @@ int twoPlayersGame()
       printf("\nIngresa que movimiento quieres hacer\n");
 			mov_end=readChessCoords();
 		}
-    
+    	
 		currentBoard = changePos(currentBoard,mov_start,mov_end);
 	}
 	

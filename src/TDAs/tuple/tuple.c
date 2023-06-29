@@ -68,7 +68,6 @@ void scaleTuple(tuple* T,int scalar)
 	return;
 }
 
-
 void divideTuple(tuple* dividend,tuple* divisor) //this is int division
 	{
 		
@@ -87,7 +86,7 @@ void divideTuple(tuple* dividend,tuple* divisor) //this is int division
 
 void linearCombination(tuple* vectors[], ArrayList* storage )
 {
-	int scalars[8] = {1,1 ,-1,-1, -1,1, -1,1};
+	int scalars[8] = {1,1 ,-1,-1, -1,1, 1,-1};
 	tuple* copy[2];
 	cpyTuple(copy[0],vectors[0]);
 	cpyTuple(copy[1],vectors[1]);
@@ -97,7 +96,7 @@ void linearCombination(tuple* vectors[], ArrayList* storage )
 			scaleTuple(copy[0],scalars[index_array]);
 			scaleTuple(copy[1],scalars[index_array+1]);
 			
-			sumTuple( copy[0] ,copy[1]);
+			sumTuple(copy[0],copy[1]);
 			
 			append(storage,copy[0]);
 			nullifyTuple(copy[0]); nullifyTuple(copy[1]);
