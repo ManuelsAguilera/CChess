@@ -309,16 +309,12 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
 }
 
 int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  printf("\naa\n");
   int startRow = mov_start->y;
   int startCol = mov_start->x;
   int endRow = mov_end->y;
   int endCol = mov_end->x;
   int rowDiff = abs(endRow - startRow);
   int colDiff = abs(endCol - startCol);
-
-  printf("\n%d row\n",rowDiff);
-  printf("%d col\n",colDiff);
   
   if(rowDiff==2 && colDiff==1){
     if(board[startRow][startCol]==5){
@@ -344,42 +340,55 @@ int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8]){
       }
     }
   }
+  return 0;
+}
+/*
+int comprobarPeon(tuple* mov_start, tuple* mov_end, int board[8][8]){
+  int startRow = mov_start->y;
+  int startCol = mov_start->x;
+  int endRow = mov_end->y;
+  int endCol = mov_end->x;
+  int rowDiff = abs(endRow - startRow);
+  int colDiff = abs(endCol - startCol);
+  
+  if()
+  
   
   return 0;
 }
-
-/*
-//(2,1) (2,-1) (-2,1) (-2,-1) (1,2) (1,-2) (-1,2) (-1,-2)
-int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8])
+*/
+int comprobarPeon(tuple* mov_start,tuple* mov_end, int board[8][8])
 {
-	printf("\nComprobando CABALLO\n");
-	ArrayList* vectorMovs = createList();
-	tuple * movs[2];
-	movs[0] = createTuple(1,2); movs[1] = createTuple(2,1);
-	linearCombination(movs, vectorMovs);
-	
-	tuple * copia = createTuple(mov_start->x, mov_start->y);
-	substractTuple(copia, mov_end);
+	int movPeonx = mov_end->x - mov_start->x;
+	int movPeony = mov_end->y - mov_start->y;	
 
-	for (int i = 0; i < get_size(vectorMovs); i++)
-		{
-			//cmp returns 0 or 1
-			if (cmpTuple(copia,get(vectorMovs,i)) ) 
-				return 1;
-		}
+	int piece = board[mov_start->y][mov_start->x];
 	
+	if (movPeonx == 0)
+ 		if (movPeony == 2 || movPeony == -2 )
+   			{
+				
+	  			if (piece == PAWN && mov_start->y == 1)
+	  				return 1;
+	   			if (piece == pawn && mov_start->y == 6)
+	  				return 1;
+			}
+		else if (movPeony == 1 || movPeony == -1)
+			return 1;
+	
+	if ( (movPeonx == 1 || movPeonx == -1 ) && movPeony == 1 )
+   		if(board[mov_end->y][mov_end->x] !=BLANK)
+			return 1;
+	if ( (movPeonx == 1 || movPeonx == -1 ) && movPeony == -1 )
+		if(board[mov_end->y][mov_end->x] !=BLANK)
+   			return 1;
 	return 0;
-}*/
-
-int comprobarPeon(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  printf("\nComprobando PEÓN\n");
-  return 1;
 }
+
 
 int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 {
- //if returns 0 then an error happened
-  
+  //if returns 0 then an error happened
 	if (mov_start == NULL || mov_end ==NULL)
     return 0;
 	if (board[mov_start->y][mov_start->x] == BLANK)
@@ -561,17 +570,22 @@ int findJaqueMate(node* chess, tuple* piece) //checks if a piece is checkmating 
 	if (chess->board[piece->y][piece->x] == BLANK)  return 0;
 
 	tuple* rivalKing = (chess->turn == WHITE_P)? findPiece(chess->board,king):findPiece(chess->board,KING);
-
+	printf("SFDf\n\n");
 	//now we check if the move is valid, if so, then we have check
 
 	if (comprobarMovimiento(piece,rivalKing,chess->board))
 	{
+
+		/*
 		//revisar si el rey tiene movs
 		ArrayList* movs = createList();
 		//kingMove(chess,rivalKing,movs);
 		if (get_size(movs) == 0) 
-			return CHECKMATE;
-		return CHECK;
+			return CHECKMATE;*/
+
+		//DEVuelve jaque solo por mientras. 
+		//Para probar jaque mate, hay que hacer la funcion kingMove que genera movimientos de rey.
+		return CHECKMATE;
 	}
 	return 0;
 }

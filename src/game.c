@@ -133,7 +133,7 @@ int twoPlayersGame()
 	int checkmate;
 	while(1)
 	{
-		//system("clear");
+		system("clear");
 		printf("----------------------\n");
 		printf(" AJEDREZ MULTIJUGADOR\n");
 		printf("----------------------\n");
@@ -145,9 +145,7 @@ int twoPlayersGame()
 		printf("\nIngresa qué movimiento quieres hacer:\n");
 		mov_end=readChessCoords();
 
-    // para checkear qué hay en las posiciones seleccionadas
-    printf("\npos inicial %d\n",currentBoard->board[mov_start->y][mov_start->x]);
-    printf("pos final %d\n",currentBoard->board[mov_end->y][mov_end->x]);
+ 		if (cmpTuple(mov_start,mov_end)) return 1;
 
 		while (comprobarMovimiento(mov_start, mov_end, currentBoard->board) != 1)
 		{
@@ -160,6 +158,7 @@ int twoPlayersGame()
     	
 		currentBoard = changePos(currentBoard,mov_start,mov_end);
 		checkmate = findJaqueMate(currentBoard,mov_end);
+		
 		if (checkmate == CHECKMATE)
 			return 1;
 		

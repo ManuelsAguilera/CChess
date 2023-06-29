@@ -170,6 +170,7 @@ void menuJuego(HashMap * playersMap)
 				addWin(playersMap,Jugador,twoPlayersGame());
 				
 				showPlayer(playersMap,Jugador);
+				printf("\n");
 				break;
 			case 2:
 				puts("\nto do");
