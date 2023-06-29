@@ -127,8 +127,8 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
   int colDiff = abs(endCol - startCol);
   
   if(rowDiff>0 && colDiff==0){
-    if(board[mov_start->y][mov_start->x]==3 || board[mov_start->y][mov_start->x]==2){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==3 || board[startRow][startCol]==2){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startRow<endRow){
             for(int i=1;i<rowDiff;i++){
@@ -148,8 +148,8 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
         return 1;
       }
     }
-    if(board[mov_start->y][mov_start->x]==30 || board[mov_start->y][mov_start->x]==20){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==30 || board[startRow][startCol]==20){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startRow<endRow){
             for(int i=1;i<rowDiff;i++){
@@ -171,8 +171,8 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
     }
   }
   if(rowDiff==0 && colDiff>0){
-    if(board[mov_start->y][mov_start->x]==3 || board[mov_start->y][mov_start->x]==2){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==3 || board[startRow][startCol]==2){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startRow<endRow){
             for(int i=1;i<rowDiff;i++){
@@ -192,8 +192,8 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
         return 1;
       }
     }
-    if(board[mov_start->y][mov_start->x]==30 || board[mov_start->y][mov_start->x]==20){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==30 || board[startRow][startCol]==20){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startRow<endRow){
             for(int i=1;i<rowDiff;i++){
@@ -226,8 +226,8 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
   int colDiff = abs(endCol - startCol);
 
   if(rowDiff == colDiff){
-    if(board[mov_start->y][mov_start->x]==4 || board[mov_start->y][mov_start->x]==2){
-      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==4 || board[startRow][startCol]==2){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startCol<endCol){
             if(startRow<endRow){
@@ -265,8 +265,8 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
         return 1;
       }
     }
-    if(board[mov_start->y][mov_start->x]==40 || board[mov_start->y][mov_start->x]==20){
-      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0){
+    if(board[startRow][startCol]==40 || board[startRow][startCol]==20){
+      if(board[endRow][endCol]<7 || board[endRow][endCol]==0){
         if(rowDiff>1){
           if(startCol<endCol){
             if(startRow<endRow){
@@ -308,6 +308,47 @@ int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
   return 0;
 }
 
+int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8]){
+  printf("\naa\n");
+  int startRow = mov_start->y;
+  int startCol = mov_start->x;
+  int endRow = mov_end->y;
+  int endCol = mov_end->x;
+  int rowDiff = abs(endRow - startRow);
+  int colDiff = abs(endCol - startCol);
+
+  printf("\n%d row\n",rowDiff);
+  printf("%d col\n",colDiff);
+  
+  if(rowDiff==2 && colDiff==1){
+    if(board[startRow][startCol]==5){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
+        return 1;
+      }
+    }
+    if(board[startRow][startCol]==50){
+      if(board[endRow][endCol]<7 || board[endRow][endCol]==0){
+        return 1;
+      }
+    }
+  }
+  if(rowDiff==1 && colDiff==2){
+    if(board[startRow][startCol]==5){
+      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
+        return 1;
+      }
+    }
+    if(board[startRow][startCol]==50){
+      if(board[endRow][endCol]<7 || board[endRow][endCol]==0){
+        return 1;
+      }
+    }
+  }
+  
+  return 0;
+}
+
+/*
 //(2,1) (2,-1) (-2,1) (-2,-1) (1,2) (1,-2) (-1,2) (-1,-2)
 int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8])
 {
@@ -328,7 +369,7 @@ int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8])
 		}
 	
 	return 0;
-}
+}*/
 
 int comprobarPeon(tuple* mov_start, tuple* mov_end, int board[8][8]){
   printf("\nComprobando PEÓN\n");
@@ -460,7 +501,7 @@ void fenToBoard(node* chess, const char* fencode)
   }
 }
 
-
+/*
 
 void kingMove(node* chess, tuple* piece, ArrayList* storage)
 {
@@ -476,7 +517,7 @@ void kingMove(node* chess, tuple* piece, ArrayList* storage)
 
     for (int i = 1; i < 5; i++) {
         tuple* newPos = sumTuple(initialPos, get(storage, i * -1));
-        if (comprobarMovimiento(chess->board, newPos) == 0)
+        if (comprobarMovimiento(initialPos,newPos,chess->board) == 0)
             pop(storage, i * -1);
 
         // Clean up the memory
@@ -487,7 +528,7 @@ void kingMove(node* chess, tuple* piece, ArrayList* storage)
     nullifyTuple(initialPos);
 }
 
-
+ */
 
 
 /*
@@ -507,14 +548,11 @@ void kingMove(node* chess, tuple* piece,ArrayList* storage)
 }	*/
 
 
-void bishopMove(node*,tuple*,ArrayList*)
-{
-	//similar aproach, but with each new vector, you'll have to scale it till it touches border of matrix
-	//or finds another piece
-	return;
-}
-ArrayList* rookMove(node*,tuple);
 
+
+
+
+ArrayList* rookMove(node*,tuple);
 ArrayList* queenMove(node*,tuple);
 ArrayList* knightMove(node*,tuple);
 
@@ -530,7 +568,7 @@ int findJaqueMate(node* chess, tuple* piece) //checks if a piece is checkmating 
 	{
 		//revisar si el rey tiene movs
 		ArrayList* movs = createList();
-		kingMove(chess,rivalKing,movs);
+		//kingMove(chess,rivalKing,movs);
 		if (get_size(movs) == 0) 
 			return CHECKMATE;
 		return CHECK;
