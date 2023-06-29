@@ -142,7 +142,6 @@ int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]){
   return 0;
 }
 
-
 int comprobarReina(tuple* mov_start, tuple* mov_end){
   printf("\nComprobando REINA\n");
 	//if(comprobarTorre(mov_start,mov_end)==1 && comprobarAlfil(mov_start,mov_end)==1)
@@ -154,25 +153,29 @@ int comprobarReina(tuple* mov_start, tuple* mov_end){
 
 int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
 {
-	printf("ProbarTprre");
-	tuple* vectorMov = createTuple(0,0);
-	cpyTuple(vectorMov,mov_end);
-	printf("\nv %d,%d",mov_end->x,mov_end->y);
+	printf("Probar Torre");
+	tuple* vectorMov = createTuple(mov_end->x, mov_end->y);
+	
+	
+	
 	substractTuple(vectorMov,mov_start); //movement of piece
+	
 	//proving that a movement has form x(1,0) or x(0,1)
-	if ( (vectorMov->x == 0 ^ vectorMov->y ==0) ) return 0;// xor
+	if ( !(vectorMov->x == 0 ^ vectorMov->y ==0) ) return 0;// xor
 	
 	//if vector has the form, then get wich form
 	tuple* form = (vectorMov->x == 0)?createTuple(0,1): createTuple(1,0);
-	//printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
+	
 	//now just check it isnt jumping any pieces.
 	if (vectorMov->x > 0 || vectorMov->y >0) //if is positive
 		for (int i = 1; i < 7; i++)
 			{
-				scaleTuple(form,i);
-				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
-					return 1;
 				
+				scaleTuple(form,i);
+				
+				if ( cmpTuple(form,vectorMov)  == 1) //si es el mov
+					return 0;
+				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
 				if (board[form->y][form->x]  != BLANK) 
 					return 0;
 	
@@ -181,8 +184,9 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
 		for (int i = -1; i > 7; i--)
 			{
 				scaleTuple(form,i);
+				printf("\nf %d,%d\nv %d %d\n",form->x,form->y,vectorMov->x,vectorMov->y);
 				if ( cmpTuple(form,vectorMov)  ) //si no es el mov
-					return 1;
+					return 0;
 				
 				if (board[form->y][form->x]  != BLANK) 
 					return 0;
@@ -192,10 +196,37 @@ int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8])
 	return 1;
 }
 
+int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
+  printf("\nComprobando ALFIL\n");
+  int startRow = mov_start->y - '0';
+  int startCol = mov_start->x - 'A';
+  int endRow = mov_end->y - '0';
+  int endCol = mov_end->x - 'A';
+  int rowDiff = abs(endRow - startRow);
+  int colDiff = abs(endCol - startCol);
+
+  if(rowDiff == colDiff){
+    if(board[mov_start->y][mov_start->x]==4){
+      if(board[mov_end->y][mov_end->x]>7 || board[mov_end->y][mov_end->x]==0){
+        if(rowDiff>1){
+          
+        }
+        return 1;
+      }
+    }  
+    if(board[mov_start->y][mov_start->x]==40){
+      if(board[mov_end->y][mov_end->x]<7 || board[mov_end->y][mov_end->x]==0)
+        return 1;
+    }
+  }
+  
+  return 0;
+}
+/*
 int comprobarAlfil(tuple* mov_start,tuple* mov_end){
   printf("\nComprobando ALFIL\n");
   return 1;
-}
+}*/
 
 int comprobarCaballo(tuple* mov_start, tuple* mov_end)
 {
@@ -238,7 +269,7 @@ int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 	if (board[mov_start->y][mov_start->x] == ROOK || board[mov_start->x][mov_start->y] == rook)
 		return comprobarTorre(mov_start, mov_end,board);
 	if (board[mov_start->y][mov_start->x] == BISHOP || board[mov_start->x][mov_start->y] == bishop)
-		return comprobarAlfil(mov_start, mov_end);
+		return comprobarAlfil(mov_start, mov_end, board);
 	if (board[mov_start->y][mov_start->x] == KNIGHT || board[mov_start->x][mov_start->y] == knight)
 		return comprobarCaballo(mov_start, mov_end);
 	if (board[mov_start->y][mov_start->x] == PAWN || board[mov_start->x][mov_start->y] == pawn)
@@ -248,8 +279,8 @@ int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8])
 int twoPlayersGame()
 {
 	node* currentBoard = createNode();
-	
-	fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+	fenToBoard(currentBoard,"rnbqkbnr/8/2p2p2/8/8/8/7P/RNBQKBNR");
+	//fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 	tuple* mov_end = NULL;
 	tuple* mov_start = NULL;
 	
