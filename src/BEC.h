@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include "TDAs/tuple/tuple.h"
 #include "TDAs/arraylist/arraylist.h"
 #include "TDAs/tuple/tuple.h"
 #include <unistd.h>
@@ -17,7 +18,7 @@
 #define MAXCHAR 72
 
 #define WHITE_P -10
-#define BLACK_P 10
+#define BLACK_P -1
 
 //pieces
 //White pieces are in upper cases, and black ones in lower case
@@ -71,6 +72,9 @@ int comprobarMovimiento(tuple * mov_start, tuple * mov_end, int board[8][8]);
 
 
 void fenToBoard(node* chess, const char* fencode);
+
+int findJaqueMate(node* chess, tuple* piece);
+
 
 //Move value of a position to another
 

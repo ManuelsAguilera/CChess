@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <stdio.h>
+#include "TDAs/tuple/tuple.h"
 #include "TDAs/arraylist/arraylist.h"
 #include "TDAs/tuple/tuple.h"
 #include <unistd.h>
@@ -25,7 +26,7 @@
 
 //players id
 #define WHITE_P -10
-#define BLACK_P 10
+#define BLACK_P -1
 
 //pieces
 //White pieces are in upper cases, and black ones in lower case
@@ -61,160 +62,206 @@ typedef struct chessboard {
 
 
 
-
 node* createNode(int turn)
 {
-	node* new;
-	new = malloc(sizeof(node));
-	new->turn = turn;
+	node* New;
+	New = malloc(sizeof(node));
+	New->turn = turn;
   
-	//new->anpassant = createTuple(0,0);
-	//new->Wcastle = createTuple(0,0);
-	//new->Bcastle = createTuple(0,0);
+	//New->anpassant = createTuple(0,0);
+	//New->Wcastle = createTuple(0,0);
+	//New->Bcastle = createTuple(0,0);
 	
-	return new;
+	return New;
 }
-tuple* findPiece(int board[8][8],int ID)
+
+tuple* findKing(int board[8][8],int ID)
 {
-		for (int i=0; i < 7; i++)
-			for (int j=0; j < 7; j++)
-				if (board[i][j] == ID) 
-					return createTuple(i,j);
+	for (int i=0; i < 7; i++)
+	{
+		for (int j=0; j < 7; j++)
+		{
+			if (board[j][i] == ID) 
+			{
+				printf("%d,%d\n",i,j);
+				return createTuple(j,i);
+			}
+		}
+	}
+	
 	return NULL;
 }
 
-
 /** FUNCIONES PARA COMPROBAR **/
 
-int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  printf("\nComprobando REY\n");
-  int startRow = mov_start->y ;
-  int startCol = mov_start->x;
-  int endRow = mov_end->y;
-  int endCol = mov_end->x;
-  int rowDiff = abs(endRow - startRow);
-  int colDiff = abs(endCol - startCol);
+int comprobarRey(tuple* mov_start, tuple* mov_end, int board[8][8])
+{
+	printf("\nComprobando REY\n");
+	int startRow = mov_start->y ;
+	int startCol = mov_start->x;
+	int endRow = mov_end->y;
+	int endCol = mov_end->x;
+	int rowDiff = abs(endRow - startRow);
+	int colDiff = abs(endCol - startCol);
 
-  if(rowDiff <= 1 && colDiff <= 1){
-    if(board[startRow][startCol]==1){
-      if(board[endRow][endCol]>7 || board[endRow][endCol]==0)
-        return 1;
-    }  
-    if(board[startRow][startCol]==10){
-      if(board[endRow][endCol]<7 || board[endRow][endCol]==0)
-        return 1;
-    }
-  }
-  return 0;
+	if(rowDiff <= 1 && colDiff <= 1)
+	{
+		if(board[startRow][startCol]==1)
+		{
+			if(board[endRow][endCol]>7 || board[endRow][endCol]==0)
+				return 1;
+		}  
+		if(board[startRow][startCol]==10)
+		{
+			if(board[endRow][endCol]<7 || board[endRow][endCol]==0)
+				return 1;
+		}
+	}
+	
+	return 0;
 }
 
-int comprobarReina(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  int rowDiff = abs(mov_end->y - mov_start->y);
-  int colDiff = abs(mov_end->x - mov_start->x);
+int comprobarReina(tuple* mov_start, tuple* mov_end, int board[8][8])
+{
+	int rowDiff = abs(mov_end->y - mov_start->y);
+	int colDiff = abs(mov_end->x - mov_start->x);
 
-  if(rowDiff==colDiff) return comprobarAlfil(mov_start,mov_end,board);
-  if(rowDiff>0 && colDiff==0) return comprobarTorre(mov_start,mov_end,board);
-  if(rowDiff==0 && colDiff>0) return comprobarTorre(mov_start,mov_end,board);
-  return 0;
+	if(rowDiff == colDiff)
+		return comprobarAlfil(mov_start, mov_end, board); //?
+	if(rowDiff > 0 && colDiff == 0)
+		return comprobarTorre(mov_start, mov_end, board);
+	if(rowDiff == 0 && colDiff > 0)
+		return comprobarTorre(mov_start, mov_end, board);
+
+	return 0;
 }
 
-int comprobarTorre(tuple* mov_start,tuple* mov_end,int board[8][8]){
-  int startRow = mov_start->y ;
-  int startCol = mov_start->x;
-  int endRow = mov_end->y;
-  int endCol = mov_end->x;
-  int rowDiff = abs(endRow - startRow);
-  int colDiff = abs(endCol - startCol);
+int comprobarTorre(tuple* mov_start, tuple* mov_end, int board[8][8])
+{
+	int startRow = mov_start->y ;
+	int startCol = mov_start->x;
+	int endRow = mov_end->y;
+	int endCol = mov_end->x;
+	int rowDiff = abs(endRow - startRow);
+	int colDiff = abs(endCol - startCol);
   
-  if(rowDiff>0 && colDiff==0){
-    if(board[startRow][startCol]==3 || board[startRow][startCol]==2){
-      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
-        if(rowDiff>1){
-          if(startRow<endRow){
-            for(int i=1;i<rowDiff;i++){
-              if(board[startRow+i][startCol]!=0){
-                return 0;
-              }
-            }
-          }
-          if(startRow>endRow){
-            for(int i=1;i<colDiff;i++){
-              if(board[startRow-i][startCol]!=0){
-                return 0;
-              }
-            }
-          }
-        }
-        return 1;
-      }
-    }
-    if(board[startRow][startCol]==30 || board[startRow][startCol]==20){
-      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
-        if(rowDiff>1){
-          if(startRow<endRow){
-            for(int i=1;i<rowDiff;i++){
-              if(board[startRow+i][startCol]!=0){
-                return 0;
-              }
-            }
-          }
-          if(startRow>endRow){
-            for(int i=1;i<colDiff;i++){
-              if(board[startRow-i][startCol]!=0){
-                return 0;
-              }
-            }
-          }
-        }
-        return 1;
-      }
-    }
-  }
-  if(rowDiff==0 && colDiff>0){
-    if(board[startRow][startCol]==3 || board[startRow][startCol]==2){
-      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
-        if(rowDiff>1){
-          if(startRow<endRow){
-            for(int i=1;i<rowDiff;i++){
-              if(board[startRow][startCol+i]!=0){
-                return 0;
-              }
-            }
-          }
-          if(startRow>endRow){
-            for(int i=1;i<colDiff;i++){
-              if(board[startRow][startCol-i]!=0){
-                return 0;
-              }
-            }
-          }
-        }
-        return 1;
-      }
-    }
-    if(board[startRow][startCol]==30 || board[startRow][startCol]==20){
-      if(board[endRow][endCol]>7 || board[endRow][endCol]==0){
-        if(rowDiff>1){
-          if(startRow<endRow){
-            for(int i=1;i<rowDiff;i++){
-              if(board[startRow][startCol+i]!=0){
-                return 0;
-              }
-            }
-          }
-          if(startRow>endRow){
-            for(int i=1;i<colDiff;i++){
-              if(board[startRow][startCol-i]!=0){
-                return 0;
-              }
-            }
-          }
-        }
-        return 1;
-      }
-    }
-  }
-  return 0;
+	if(rowDiff > 0 && colDiff == 0)
+	{
+		if(board[startRow][startCol] == 3 || board[startRow][startCol] == 2)
+		{
+			if(board[endRow][endCol] > 7 || board[endRow][endCol] == 0)
+			{
+				if(rowDiff > 1)
+				{
+					if(startRow < endRow)
+					{
+						for(int i = 1; i < rowDiff; i++)
+						{
+							if(board[startRow+i][startCol] != 0)
+								return 0;
+						}
+					}
+					if(startRow > endRow)
+					{
+						for(int i = 1; i < colDiff; i++)
+						{
+							if(board[startRow-i][startCol] != 0)
+								return 0;
+						}
+					}
+				}
+				
+				return 1;
+			}
+		}
+		if(board[startRow][startCol] == 30 || board[startRow][startCol] == 20)
+		{
+			if(board[endRow][endCol] > 7 || board[endRow][endCol] == 0)
+			{
+				if(rowDiff > 1)
+				{
+					if(startRow < endRow)
+					{
+						for(int i = 1; i < rowDiff; i++)
+						{
+							if(board[startRow+i][startCol] != 0)
+								return 0;
+						}
+					}
+					if(startRow > endRow)
+					{
+						for(int i = 1; i < colDiff; i++)
+						{
+							if(board[startRow-i][startCol] != 0)
+								return 0;
+						}
+					}
+				}
+				
+				return 1;
+			}
+		}
+	}
+	
+	if(rowDiff == 0 && colDiff > 0)
+	{
+		if(board[startRow][startCol] == 3 || board[startRow][startCol] == 2)
+		{
+			if(board[endRow][endCol] > 7 || board[endRow][endCol] == 0)
+			{
+				if(rowDiff > 1)
+				{
+					if(startRow < endRow)
+					{
+						for(int i = 1; i < rowDiff; i++)
+						{
+							if(board[startRow][startCol+i] != 0)
+								return 0;
+						}
+					}
+					if(startRow > endRow)
+					{
+						for(int i = 1; i < colDiff; i++)
+						{
+							if(board[startRow][startCol-i] != 0)
+								return 0;
+						}
+					}
+				}
+				
+				return 1;
+			}
+		}
+		if(board[startRow][startCol] == 30 || board[startRow][startCol] == 20)
+		{
+			if(board[endRow][endCol] > 7 || board[endRow][endCol] == 0)
+			{
+				if(rowDiff > 1)
+				{
+					if(startRow < endRow)
+					{
+						for(int i = 1; i < rowDiff; i++)
+						{
+							if(board[startRow][startCol+i] != 0)
+								return 0;
+						}
+					}
+					if(startRow > endRow)
+					{
+						for(int i = 1; i < colDiff; i++)
+						{
+							if(board[startRow][startCol-i] != 0)
+								return 0;
+						}
+					}
+				}
+				
+				return 1;
+			}
+		}
+	}
+	
+	return 0;
 }
 
 int comprobarAlfil(tuple* mov_start, tuple* mov_end, int board[8][8]){
@@ -342,21 +389,8 @@ int comprobarCaballo(tuple* mov_start, tuple* mov_end, int board[8][8]){
   }
   return 0;
 }
-/*
-int comprobarPeon(tuple* mov_start, tuple* mov_end, int board[8][8]){
-  int startRow = mov_start->y;
-  int startCol = mov_start->x;
-  int endRow = mov_end->y;
-  int endCol = mov_end->x;
-  int rowDiff = abs(endRow - startRow);
-  int colDiff = abs(endCol - startCol);
-  
-  if()
-  
-  
-  return 0;
-}
-*/
+
+
 int comprobarPeon(tuple* mov_start,tuple* mov_end, int board[8][8])
 {
 	int movPeonx = mov_end->x - mov_start->x;
@@ -510,89 +544,159 @@ void fenToBoard(node* chess, const char* fencode)
   }
 }
 
-/*
 
-void kingMove(node* chess, tuple* piece, ArrayList* storage)
+
+
+
+ArrayList* rookMove(node* board, int row, int col)
 {
-    tuple* vectors[2];
-    vectors[0] = createTuple(1, 0);
-    vectors[1] = createTuple(0, 1);
+	ArrayList* moves = createList();
 
-    linearCombination(vectors, storage);
-    // Now we have all directions
+    // Define the possible directions the king can move
+    int directions[32][2] = {{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, 
+	{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}, {0, 8}, {-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0}, {-8, 0}, 
+	{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}, {0, -8}};
 
-    // Add a tuple copy that adds to the initial position of the piece to check
-    tuple* initialPos = createTuple(piece->x, piece->y);
+    // Iterate over each direction
+    for (int i = 0; i < 32; i++)
+    {
+        int newRow = row + directions[i][0];
+        int newCol = col + directions[i][1];
 
-    for (int i = 1; i < 5; i++) {
-        tuple* newPos = sumTuple(initialPos, get(storage, i * -1));
-        if (comprobarMovimiento(initialPos,newPos,chess->board) == 0)
-            pop(storage, i * -1);
+        // Check if the new position is within the board boundaries
+        if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)
+        {
+            int piece = board->board[newRow][newCol];
 
-        // Clean up the memory
-        nullifyTuple(newPos);
+            // Check if the new position is empty or occupied by an opponent's piece
+            if (piece == BLANK || (board->turn == WHITE_P && piece >= king) || (board->turn == BLACK_P && piece <= -king))
+            {
+                // Create a new move and store it in the ArrayList
+                tuple * newMove = createTuple(newRow, newCol);
+                append(moves, newMove); 
+            }
+        }
     }
 
-    // Clean up the memory
-    nullifyTuple(initialPos);
+    return moves;
+}
+ArrayList* queenMove(node* board, int row, int col)
+{
+	ArrayList* moves = createList();
+
+    // Define the possible directions the king can move
+    int directions[48][2] = {{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, 
+	{0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}, {0, 8}, {-1, 0}, {-2, 0}, {-3, 0}, {-4, 0}, {-5, 0}, {-6, 0}, {-7, 0}, {-8, 0}, 
+	{0, -1}, {0, -2}, {0, -3}, {0, -4}, {0, -5}, {0, -6}, {0, -7}, {0, -8}, {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}, {8, 8}, {-1, -1}, {-2, -2}, {-3, -3}, {-4, -4}, {-5, -5}, {-6, -6}, {-7, -7}, {-8, -8}};
+
+    // Iterate over each direction
+    for (int i = 0; i < 48; i++)
+    {
+        int newRow = row + directions[i][0];
+        int newCol = col + directions[i][1];
+
+        // Check if the new position is within the board boundaries
+        if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)
+        {
+            int piece = board->board[newRow][newCol];
+
+            // Check if the new position is empty or occupied by an opponent's piece
+            if (piece == BLANK || (board->turn == WHITE_P && piece >= king) || (board->turn == BLACK_P && piece <= -king))
+            {
+                // Create a new move and store it in the ArrayList
+                tuple * newMove = createTuple(newRow, newCol);
+                append(moves, newMove); 
+            }
+        }
+    }
+
+    return moves;
 }
 
- */
 
-
-/*
-void kingMove(node* chess, tuple* piece,ArrayList* storage)
+ArrayList* generateKingMoves(struct chessboard* board, int row, int col)
 {
-	tuple* vectors[2];
-	vectors[0] = createTuple(1,0);
-	vectors[0] = createTuple(0,1);
+    ArrayList* moves = createList();
 
-	linearCombination(vectors,storage);
-	//Now we got all directions 
-	
-	/* Agregar un tuple cpy que se sume a la pos inicial de la pieza, para comprobar
-	for (int i=1; i <5; i++)
-		if (comprobarMovimiento(chess->board, get(storage,i*-1)) == 0)
-			pop(storage,i*-1);
-}	*/
+    // Define the possible directions the king can move
+    int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+    // Iterate over each direction
+    for (int i = 0; i < 8; i++)
+    {
+        int newRow = row + directions[i][0];
+        int newCol = col + directions[i][1];
+
+        // Check if the new position is within the board boundaries
+        if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)
+        {
+            int piece = board->board[newRow][newCol];
+
+            // Check if the new position is empty or occupied by an opponent's piece
+            if (piece == BLANK || (board->turn == WHITE_P && piece >= king) || (board->turn == BLACK_P && piece <= -king))
+            {
+                // Create a new move and store it in the ArrayList
+                tuple * newMove = createTuple(newRow, newCol);
+                append(moves, newMove); 
+            }
+        }
+    }
+
+    return moves;
+}
 
 
-
-
-
-
-ArrayList* rookMove(node*,tuple);
-ArrayList* queenMove(node*,tuple);
-ArrayList* knightMove(node*,tuple);
-
-int findJaqueMate(node* chess, tuple* piece) //checks if a piece is checkmating or cheking
+int findJaqueMate(node* chess, tuple* piece) //checks if a piece is checkmating or checking
 {
-	if (chess->board[piece->y][piece->x] == BLANK)  return 0;
+	if (chess->board[piece->y][piece->x] == BLANK)
+		return 0;
 
-	tuple* rivalKing = (chess->turn == WHITE_P)? findPiece(chess->board,king):findPiece(chess->board,KING);
-	printf("SFDf\n\n");
+	tuple* rivalKing = (chess->turn == WHITE_P) ? findKing(chess->board, king) : findKing(chess->board, KING);
 	//now we check if the move is valid, if so, then we have check
-
-	if (comprobarMovimiento(piece,rivalKing,chess->board))
+	if (rivalKing != NULL) printf("rivalKing is in: %d %d\n",rivalKing->x,rivalKing->y);
+	else
+		printf("rey blanco %d rey negro %d es null\n",king,KING);
+	/*if (comprobarMovimiento(piece, rivalKing, chess->board))
 	{
-
-		/*
+		printf("Movement exists");
 		//revisar si el rey tiene movs
 		ArrayList* movs = createList();
 		//kingMove(chess,rivalKing,movs);
-		if (get_size(movs) == 0) 
-			return CHECKMATE;*/
+		if (get_size(movs) == 0 || movs == NULL) 
+			return CHECKMATE;
+		printf("movs is not null\n");
 
 		//DEVuelve jaque solo por mientras. 
 		//Para probar jaque mate, hay que hacer la funcion kingMove que genera movimientos de rey.
 		return CHECKMATE;
-	}
+	}*/
+	
 	return 0;
 }
 
+node* copyNode(node* source)
+{
+	node* New = createNode(source->turn);
+	memcpy(New->board, source->board, sizeof(source->board));
 
-//will return a list of best posible moves.
-ArrayList* get_adj_node(node*);
+	return New;
+}
+
+//will return a list of best possible moves.
+ArrayList* get_adj_node(node* nodo)
+{
+	ArrayList* adjNodes = createList();
+
+	for (int i = 1; i <= 6; i++)
+	{
+		node* New = copyNode(nodo);
+		tuple* start = findKing(New->board, i * 10);
+		// perform necessary operations on new node
+		// and add it to adjNodes list
+	}
+
+	return adjNodes;
+}
 
 int getPieceScore(node*);
 //score for how many pieces does a player have

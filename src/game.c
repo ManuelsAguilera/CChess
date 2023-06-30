@@ -126,14 +126,14 @@ int twoPlayersGame()
 {
 	
 	node* currentBoard = createNode(WHITE_P);
-	//fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/7P/RNBQKBNR");
-	fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+	fenToBoard(currentBoard,"rnbqkbnr/pppp1ppp/8/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR");
+	//fenToBoard(currentBoard,"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 	tuple* mov_end = NULL;
 	tuple* mov_start = NULL;
 	int checkmate;
 	while(1)
 	{
-		system("clear");
+		//system("clear");
 		printf("----------------------\n");
 		printf(" AJEDREZ MULTIJUGADOR\n");
 		printf("----------------------\n");
@@ -155,12 +155,18 @@ int twoPlayersGame()
       printf("\nIngresa que movimiento quieres hacer\n");
 			mov_end=readChessCoords();
 		}
-    	
-		currentBoard = changePos(currentBoard,mov_start,mov_end);
-		checkmate = findJaqueMate(currentBoard,mov_end);
-		
+    	checkmate = findJaqueMate(currentBoard,mov_end);
 		if (checkmate == CHECKMATE)
-			return 1;
+		{
+			if (currentBoard->turn == WHITE_P)
+				return 1;
+			else
+				return 0;
+		}
+		
+		currentBoard = changePos(currentBoard,mov_start,mov_end);
+		
+		
 		
 	}
 	

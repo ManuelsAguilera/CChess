@@ -12,9 +12,27 @@
 
 ---
 
+# Que esta hecho
+- MODO 2V2
+- Almacenar jugadores
+- Mostrar mejores jugadores
+- Cargar los jugadores al principio del programa
+# Que no esta hecho
+- Modo Bec
+- El grafo
+- Detectar Jaque Mate
+- Guardar datos al final del programa
+- Arreglar bugs sobre la lectura
+  
+
+## Una disculpa
+Lamentamos no poder realizar todo lo que quisimos en el programa, al principio logramos organizarmos bien, y avanzar bastante. Pero al final en las ultimas semanas costo mucho poder organizar a todos. Y eso terminaria estancando bastante el proyecto.
+
+Este era un proyecto que personalmente para mi, Manuel, tenia muchas ganas  de lograr. Y me es bastante dificil aceptar que no lo logre.
+
 # Descripcion del proyecto:
 
-Consistira en un juego de ajedrez, con modalidad de un jugador (contra la cpu local), y de dos jugadores. Ademas guardara el registro de jugadores junto a sus victorias, derrotas, y un ratio de ambas. Se podra revisar una pantalla de highscore, la cual mostrara a los jugadores con mayores victorias contra la cpu.
+Consistira en un juego de ajedrez, con modalidad de un jugador (contra la cpu local), y de dos jugadores. Ademas guardara el registro de jugadores junto a sus victorias. Se podra revisar una pantalla de highscore, la cual mostrara a los jugadores con mayores victorias contra la cpu.
 
 ## Diseño
 
@@ -37,3 +55,6 @@ De esta manera tendremos un metodo de calcular los movimientos optimos, al desar
 - Es importante generar un modo eficiente de calcular cada movimiento de todas las piezas validas, ya que esto es lo que escencialmente realentizara el proceso de busqueda en profundidad.
 - Debemos generar una forma eficiente de calcular el puntaje de cada tablero.
 - Poder transimitir la informacion de la partida, con una interfaz clara, o usando notacion de ajedrez clara.
+
+
+
