@@ -11,6 +11,9 @@
 - Manuel Aguilera
 
 ---
+# Importante
+El codigo fue desarrollado y probado en ubuntu linux. Probar ejecutarlo en replit o en una maquina virtual, puesto que puede que de errores.
+![Icono ubuntu](https://cdn-icons-png.flaticon.com/512/5969/5969282.png)
 
 # Que esta hecho
 - MODO 2V2
